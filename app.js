@@ -6,77 +6,88 @@ function showMaster(){
   document.getElementById("masterBox").style.display = "block";
 }
 
-function isSameIgnoringCase(a,b){
+function sameIgnoreCase(a,b){
   return a.toLowerCase() === b.toLowerCase();
 }
 
-function isSameIgnoringPunctuation(a,b){
+function sameIgnorePunc(a,b){
   return a.replace(/[^\w]/g,"") === b.replace(/[^\w]/g,"");
 }
 
 function check(){
 
-  const master = tokenize(document.getElementById("master").value);
-  const typed  = tokenize(document.getElementById("typed").value);
+  const masterText = document.getElementById("master").value.trim();
+  const typedText  = document.getElementById("typed").value.trim();
 
-  let i = 0, j = 0, out = "";
+  if(!masterText || !typedText){
+    alert("Please type dictation and paste master passage");
+    return;
+  }
 
-  let addition = 0,
-      omission = 0,
-      spelling = 0,
-      capitalization = 0,
-      punctuation = 0;
+  const master = tokenize(masterText);
+  const typed  = tokenize(typedText);
+
+  let i = 0, j = 0, html = "";
+
+  let addition = 0;
+  let omission = 0;
+  let spelling = 0;
+  let capitalization = 0;
+  let punctuation = 0;
 
   while(i < master.length || j < typed.length){
 
     if(master[i] === typed[j]){
-      out += `<span class="correct">${typed[j]}</span> `;
+      html += `<span class="correct">${typed[j]}</span> `;
       i++; j++;
     }
 
-    // ADDITION
     else if(typed[j] && master[i] === typed[j+1]){
-      out += `<span class="extra">${typed[j]}</span> `;
-      addition++;
-      j++;
+      html += `<span class="extra">${typed[j]}</span> `;
+      addition++; j++;
     }
 
-    // OMISSION
     else if(master[i] && master[i+1] === typed[j]){
-      out += `<span class="miss">(${master[i]})</span> `;
-      omission++;
-      i++;
+      html += `<span class="miss">(${master[i]})</span> `;
+      omission++; i++;
     }
 
-    // CAPITALIZATION
-    else if(isSameIgnoringCase(master[i], typed[j])){
-      out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
-      capitalization++;
-      i++; j++;
+    else if(master[i] && typed[j] && sameIgnoreCase(master[i], typed[j])){
+      html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
+      capitalization++; i++; j++;
     }
 
-    // PUNCTUATION
-    else if(isSameIgnoringPunctuation(master[i], typed[j])){
-      out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
-      punctuation++;
-      i++; j++;
+    else if(master[i] && typed[j] && sameIgnorePunc(master[i], typed[j])){
+      html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
+      punctuation++; i++; j++;
     }
 
-    // SPELLING
+    else if(master[i] && typed[j]){
+      html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
+      spelling++; i++; j++;
+    }
+
+    else if(typed[j]){
+      html += `<span class="extra">${typed[j]}</span> `;
+      addition++; j++;
+    }
+
     else{
-      out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
-      spelling++;
-      i++; j++;
+      html += `<span class="miss">(${master[i]})</span> `;
+      omission++; i++;
     }
   }
 
   document.getElementById("result").innerHTML = `
-    <h3>Result (StenoMitra Logic)</h3>
-    <p>Addition: ${addition}</p>
-    <p>Omission: ${omission}</p>
-    <p>Spelling: ${spelling}</p>
-    <p>Capitalization: ${capitalization}</p>
-    <p>Punctuation: ${punctuation}</p>
-    <hr>${out}
+    <h3>Result (StenoMitra Method)</h3>
+    <table border="1" cellpadding="6">
+      <tr><td>Addition</td><td>${addition}</td></tr>
+      <tr><td>Omission</td><td>${omission}</td></tr>
+      <tr><td>Spelling</td><td>${spelling}</td></tr>
+      <tr><td>Capitalization</td><td>${capitalization}</td></tr>
+      <tr><td>Punctuation</td><td>${punctuation}</td></tr>
+    </table>
+    <hr>
+    <div>${html}</div>
   `;
 }
