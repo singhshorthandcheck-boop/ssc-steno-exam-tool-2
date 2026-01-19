@@ -1,26 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>SSC Steno Practice</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<h2>SSC Steno Practice (Exam Mode)</h2>
-
-<textarea id="typed" placeholder="Type dictated matter here..."></textarea>
-<br>
-<button onclick="showMaster()">Finish Typing</button>
-
 <div id="masterBox" style="display:none;">
-<textarea id="master" placeholder="Paste master passage here..."></textarea>
-<br>
-<button onclick="check()">Analyse</button>
+  <textarea id="master" placeholder="Paste master passage here..."></textarea>
+  <br>
+  <button onclick="check()">Analyse</button>
+
+  <!-- RESULT WILL APPEAR HERE -->
+  <div id="result" style="margin-top:20px;"></div>
 </div>
-
-<div id="result"></div>
-
-<script src="app.js"></script>
-</body>
-</html>
