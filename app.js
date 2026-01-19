@@ -1,3 +1,28 @@
+let timerStarted = false;
+let totalSeconds = 50 * 60;
+let timerInterval = null;
+
+function startTimer(){
+  if(timerStarted) return;
+  timerStarted = true;
+
+  timerInterval = setInterval(() => {
+    totalSeconds--;
+
+    let min = Math.floor(totalSeconds / 60);
+    let sec = totalSeconds % 60;
+
+    document.getElementById("timer").innerText =
+      `Time Left: ${min}:${sec.toString().padStart(2,'0')}`;
+
+    if(totalSeconds <= 0){
+      clearInterval(timerInterval);
+      document.getElementById("typed").disabled = true;
+      alert("Time Over!");
+    }
+  }, 1000);
+}
+
 function tokenize(text){
   return text.match(/\w+|[^\w\s]/g) || [];
 }
@@ -41,37 +66,30 @@ function check(){
       html += `<span class="correct">${typed[j]}</span> `;
       i++; j++;
     }
-
     else if(typed[j] && master[i] === typed[j+1]){
       html += `<span class="extra">${typed[j]}</span> `;
       addition++; j++;
     }
-
     else if(master[i] && master[i+1] === typed[j]){
       html += `<span class="miss">(${master[i]})</span> `;
       omission++; i++;
     }
-
     else if(master[i] && typed[j] && sameIgnoreCase(master[i], typed[j])){
       html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
       capitalization++; i++; j++;
     }
-
     else if(master[i] && typed[j] && sameIgnorePunc(master[i], typed[j])){
       html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
       punctuation++; i++; j++;
     }
-
     else if(master[i] && typed[j]){
       html += `<span class="sub">${typed[j]} (${master[i]})</span> `;
       spelling++; i++; j++;
     }
-
     else if(typed[j]){
       html += `<span class="extra">${typed[j]}</span> `;
       addition++; j++;
     }
-
     else{
       html += `<span class="miss">(${master[i]})</span> `;
       omission++; i++;
@@ -91,3 +109,8 @@ function check(){
     <div>${html}</div>
   `;
 }
+
+// START TIMER ON FIRST KEY PRESS
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("typed").addEventListener("keydown", startTimer);
+});
