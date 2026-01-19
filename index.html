@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>SSC Steno Evaluation</title>
-<link rel="stylesheet" href="styles.css">
+  <title>SSC Steno Practice</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<h2>SSC Steno Test (PDF Logic)</h2>
+<h2>SSC Stenography Practice</h2>
 
-<div id="timer">Time Left: 50:00</div>
+<div id="timer">50:00</div>
 
-<textarea id="typed" placeholder="Type dictated matter here..."></textarea>
-<br>
-<button onclick="finish()">Finish Typing</button>
+<textarea id="typed" placeholder="Start typing dictated matter..."></textarea>
 
-<div id="masterBox" style="display:none;">
-  <textarea id="master" placeholder="Paste master passage here..."></textarea>
-  <br>
-  <button onclick="analyse()">Analyse</button>
-  <div id="result"></div>
+<button onclick="finishTyping()">Finish Typing</button>
+
+<div id="masterSection" style="display:none;">
+  <h3>Paste Master Passage</h3>
+  <textarea id="master"></textarea>
+  <button onclick="analyse()">Evaluate</button>
 </div>
+
+<div id="result"></div>
 
 <script src="app.js"></script>
 </body>
