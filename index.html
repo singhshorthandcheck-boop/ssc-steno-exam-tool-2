@@ -1,45 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shorthand Mistake Checker – SSC Evaluation Tool</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<title>SSC Steno Practice</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>SSC Stenography Mistake Checker</h1>
-        <p>Exam‑Style Transcription & Evaluation Tool</p>
-    </header>
 
-    <main>
-        <div class="container">
-            <div class="panel">
-                <h2>Typed Passage (Live Transcription)</h2>
-                <textarea id="typedText" placeholder="Start typing dictation here..."></textarea>
-            </div>
-        </div>
+<h2>SSC Steno Practice (Exam Mode)</h2>
 
-        <div id="timerBox">
-            <b>Time Left:</b> <span id="timer">50:00</span>
-        </div>
+<textarea id="typed" placeholder="Type dictated matter here..."></textarea>
+<br>
+<button onclick="showMaster()">Finish Typing</button>
 
-        <button id="finishBtn">Finish Typing</button>
+<div id="masterBox" style="display:none;">
+<textarea id="master" placeholder="Paste master passage here..."></textarea>
+<br>
+<button onclick="check()">Analyse</button>
+</div>
 
-        <div id="masterSection" style="display:none;">
-            <h2>Paste Master Passage (After Typing)</h2>
-            <textarea id="masterText" placeholder="Paste original dictated matter here..."></textarea>
-            <button id="checkBtn">Check Mistakes</button>
-        </div>
+<div id="result"></div>
 
-        <div id="results">
-            <h2>Evaluation Summary</h2>
-            <div id="summaryBox"></div>
-            <h2>Detailed Comparison</h2>
-            <div id="comparison"></div>
-        </div>
-    </main>
-
-    <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
