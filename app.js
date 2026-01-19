@@ -1,123 +1,94 @@
-let started = false;
 let timeLeft = 50 * 60;
-let timerId = null;
+let timerStarted = false;
+let timer;
 
-document.getElementById("typed").addEventListener("keydown", () => {
-  if (!started) {
-    started = true;
-    timerId = setInterval(runTimer, 1000);
-  }
-});
+function startTimer() {
+  if (timerStarted) return;
+  timerStarted = true;
 
-function runTimer() {
-  if (timeLeft <= 0) {
-    clearInterval(timerId);
-    return;
-  }
-  timeLeft--;
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  document.getElementById("timer").innerText =
-    `Time Left: ${m}:${s.toString().padStart(2, "0")}`;
+  timer = setInterval(() => {
+    timeLeft--;
+    let m = Math.floor(timeLeft / 60);
+    let s = timeLeft % 60;
+    document.getElementById("timer").innerText =
+      `${m}:${s.toString().padStart(2,"0")}`;
+
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      finishTyping();
+    }
+  }, 1000);
 }
 
-function finish() {
-  document.getElementById("masterBox").style.display = "block";
+document.getElementById("typed").addEventListener("keydown", startTimer);
+
+function finishTyping() {
+  clearInterval(timer);
+  document.getElementById("masterSection").style.display = "block";
 }
 
-function normalize(text) {
+function clean(text) {
   return text
     .toLowerCase()
-    .replace(/[^\w\s]/g, "")
+    .replace(/[^a-z0-9\s]/g, "")
     .split(/\s+/)
     .filter(Boolean);
 }
 
-// Levenshtein Distance
-function distance(a, b) {
-  const dp = Array.from({ length: a.length + 1 }, () =>
-    Array(b.length + 1).fill(0)
-  );
-  for (let i = 0; i <= a.length; i++) dp[i][0] = i;
-  for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+function isNumber(w) {
+  return /^\d+$/.test(w);
+}
 
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      dp[i][j] = Math.min(
-        dp[i - 1][j] + 1,
-        dp[i][j - 1] + 1,
-        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
-      );
-    }
-  }
-  return dp[a.length][b.length];
+function similar(a, b) {
+  if (!a || !b) return false;
+  if (a[0] !== b[0]) return false;
+  return Math.abs(a.length - b.length) <= 2;
 }
 
 function analyse() {
-  const master = normalize(document.getElementById("master").value);
-  const typed  = normalize(document.getElementById("typed").value);
+  const typed = clean(document.getElementById("typed").value);
+  const master = clean(document.getElementById("master").value);
 
   let i = 0, j = 0;
   let full = 0, half = 0;
-  let view = "";
+  let html = "";
 
-  while (i < master.length) {
+  while (i < master.length || j < typed.length) {
 
-    // TYPED TEXT FINISHED → ALL OMISSIONS
+    if (i >= master.length) {
+      html += `<span class="add">${typed[j]}</span> `;
+      full++; j++; continue;
+    }
+
     if (j >= typed.length) {
-      view += `<span class="miss">(${master[i]})</span> `;
-      full++;
-      i++;
-      continue;
+      html += `<span class="miss">(${master[i]})</span> `;
+      full++; i++; continue;
     }
 
     if (typed[j] === master[i]) {
-      view += `<span class="ok">${typed[j]}</span> `;
-      i++; j++;
-      continue;
+      html += `<span class="ok">${typed[j]}</span> `;
+      i++; j++; continue;
     }
 
-    // ADDITION
-    if (j + 1 < typed.length && typed[j + 1] === master[i]) {
-      view += `<span class="add">${typed[j]}</span> `;
-      full++;
-      j++;
-      continue;
+    if (isNumber(typed[j]) || isNumber(master[i])) {
+      html += `<span class="full">${typed[j]} (${master[i]})</span> `;
+      full++; i++; j++; continue;
     }
 
-    // OMISSION
-    if (i + 1 < master.length && master[i + 1] === typed[j]) {
-      view += `<span class="miss">(${master[i]})</span> `;
-      full++;
-      i++;
-      continue;
+    if (similar(typed[j], master[i])) {
+      html += `<span class="half">${typed[j]} (${master[i]})</span> `;
+      half++; i++; j++; continue;
     }
 
-    // SPELLING → HALF
-    if (
-      typed[j][0] === master[i][0] &&
-      distance(typed[j], master[i]) <= 2
-    ) {
-      view += `<span class="half">${typed[j]} (${master[i]})</span> `;
-      half++;
-      i++; j++;
-      continue;
-    }
-
-    // WRONG WORD → FULL
-    view += `<span class="add">${typed[j]} (${master[i]})</span> `;
-    full++;
-    i++; j++;
+    html += `<span class="full">${typed[j]} (${master[i]})</span> `;
+    full++; i++; j++;
   }
 
-  const total = full + half / 2;
-
   document.getElementById("result").innerHTML = `
-    <h3>Result (PDF-Accurate)</h3>
-    <p>Total Words: ${master.length}</p>
+    <h3>Result</h3>
     <p>Full Mistakes: ${full}</p>
     <p>Half Mistakes: ${half}</p>
-    <p><b>Total Mistakes:</b> ${total}</p>
-    <hr>${view}
+    <p><b>Total Mistakes:</b> ${full + half / 2}</p>
+    <hr>${html}
   `;
 }
