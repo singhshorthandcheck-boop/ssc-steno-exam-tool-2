@@ -21,7 +21,7 @@ function finish() {
   document.getElementById("masterBox").style.display = "block";
 }
 
-function clean(text) {
+function normalize(text) {
   return text
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
@@ -29,49 +29,66 @@ function clean(text) {
     .filter(Boolean);
 }
 
+// simple spelling similarity
+function similar(a, b) {
+  if (!a || !b) return false;
+  let diff = Math.abs(a.length - b.length);
+  let same = 0;
+  for (let i = 0; i < Math.min(a.length, b.length); i++) {
+    if (a[i] === b[i]) same++;
+  }
+  return same >= Math.min(a.length, b.length) - 2 && diff <= 2;
+}
+
 function analyse() {
-  const master = clean(document.getElementById("master").value);
-  const typed  = clean(document.getElementById("typed").value);
+  const master = normalize(document.getElementById("master").value);
+  const typed  = normalize(document.getElementById("typed").value);
 
   let i = 0, j = 0;
   let full = 0, half = 0;
   let view = "";
 
-  while (i < master.length || j < typed.length) {
+  while (i < master.length) {
 
-    if (master[i] === typed[j]) {
+    if (typed[j] === master[i]) {
       view += `<span class="ok">${typed[j]}</span> `;
       i++; j++;
     }
 
     // ADDITION
-    else if (typed[j] && master[i] === typed[j + 1]) {
+    else if (typed[j+1] === master[i]) {
       view += `<span class="add">${typed[j]}</span> `;
-      full++; j++;
+      full++;
+      j++;
     }
 
     // OMISSION
-    else if (master[i] && master[i + 1] === typed[j]) {
+    else if (master[i+1] === typed[j]) {
       view += `<span class="miss">(${master[i]})</span> `;
-      full++; i++;
+      full++;
+      i++;
     }
 
-    // SPELLING / MINOR ERROR
-    else if (master[i] && typed[j]) {
-      view += `<span class="half">${typed[j]}(${master[i]})</span> `;
-      half++; i++; j++;
+    // SPELLING / MINOR
+    else if (similar(typed[j], master[i])) {
+      view += `<span class="half">${typed[j]} (${master[i]})</span> `;
+      half++;
+      i++; j++;
     }
 
+    // WRONG WORD
     else {
-      if (typed[j]) { full++; j++; }
-      else { full++; i++; }
+      view += `<span class="add">${typed[j] || "—"} (${master[i]})</span> `;
+      full++;
+      i++; j++;
     }
   }
 
   const total = full + half / 2;
 
   document.getElementById("result").innerHTML = `
-    <h3>Result</h3>
+    <h3>Result (PDF Method)</h3>
+    <p>Total Words: ${master.length}</p>
     <p>Full Mistakes: ${full}</p>
     <p>Half Mistakes: ${half}</p>
     <p><b>Total Mistakes:</b> ${total}</p>
