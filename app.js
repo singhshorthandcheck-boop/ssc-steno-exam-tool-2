@@ -1,20 +1,31 @@
-function words(t){
-  return t.trim().split(/\s+/);
+function tokenize(text){
+  return text.match(/\w+|[^\w\s]/g) || [];
 }
 
 function showMaster(){
-  document.getElementById('masterBox').style.display = 'block';
+  document.getElementById("masterBox").style.display = "block";
+}
+
+function isSameIgnoringCase(a,b){
+  return a.toLowerCase() === b.toLowerCase();
+}
+
+function isSameIgnoringPunctuation(a,b){
+  return a.replace(/[^\w]/g,"") === b.replace(/[^\w]/g,"");
 }
 
 function check(){
-  const master = words(document.getElementById('master').value);
-  const typed  = words(document.getElementById('typed').value);
 
-  let i = 0, j = 0;
-  let out = "";
+  const master = tokenize(document.getElementById("master").value);
+  const typed  = tokenize(document.getElementById("typed").value);
 
-  let fullMistake = 0;
-  let halfMistake = 0;
+  let i = 0, j = 0, out = "";
+
+  let addition = 0,
+      omission = 0,
+      spelling = 0,
+      capitalization = 0,
+      punctuation = 0;
 
   while(i < master.length || j < typed.length){
 
@@ -23,47 +34,49 @@ function check(){
       i++; j++;
     }
 
-    // EXTRA WORD → FULL MISTAKE
+    // ADDITION
     else if(typed[j] && master[i] === typed[j+1]){
       out += `<span class="extra">${typed[j]}</span> `;
-      fullMistake++;
+      addition++;
       j++;
     }
 
-    // MISSING WORD → FULL MISTAKE
+    // OMISSION
     else if(master[i] && master[i+1] === typed[j]){
       out += `<span class="miss">(${master[i]})</span> `;
-      fullMistake++;
+      omission++;
       i++;
     }
 
-    // WRONG WORD → HALF MISTAKE
-    else if(typed[j] && master[i]){
+    // CAPITALIZATION
+    else if(isSameIgnoringCase(master[i], typed[j])){
       out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
-      halfMistake++;
+      capitalization++;
       i++; j++;
     }
 
+    // PUNCTUATION
+    else if(isSameIgnoringPunctuation(master[i], typed[j])){
+      out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
+      punctuation++;
+      i++; j++;
+    }
+
+    // SPELLING
     else{
-      if(typed[j]){
-        out += `<span class="extra">${typed[j]}</span> `;
-        fullMistake++;
-        j++;
-      } else {
-        out += `<span class="miss">(${master[i]})</span> `;
-        fullMistake++;
-        i++;
-      }
+      out += `<span class="sub">${typed[j]} (${master[i]})</span> `;
+      spelling++;
+      i++; j++;
     }
   }
 
-  const totalMistake = fullMistake + (halfMistake / 2);
-
-  document.getElementById('result').innerHTML =
-    `<h3>Result</h3>
-     <p><b>Full Mistakes:</b> ${fullMistake}</p>
-     <p><b>Half Mistakes:</b> ${halfMistake}</p>
-     <p><b>Total Mistakes:</b> ${totalMistake}</p>
-     <hr>${out}`;
+  document.getElementById("result").innerHTML = `
+    <h3>Result (StenoMitra Logic)</h3>
+    <p>Addition: ${addition}</p>
+    <p>Omission: ${omission}</p>
+    <p>Spelling: ${spelling}</p>
+    <p>Capitalization: ${capitalization}</p>
+    <p>Punctuation: ${punctuation}</p>
+    <hr>${out}
+  `;
 }
-
