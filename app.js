@@ -2,7 +2,7 @@ let timeLeft = 50 * 60;
 let timerStarted = false;
 let timer;
 
-// ---------- TIMER ----------
+/* ---------------- TIMER ---------------- */
 function startTimer() {
   if (timerStarted) return;
   timerStarted = true;
@@ -23,27 +23,24 @@ function startTimer() {
 
 document.getElementById("typed").addEventListener("keydown", startTimer);
 
-// ---------- FINISH TYPING ----------
 function finishTyping() {
   clearInterval(timer);
   document.getElementById("masterSection").style.display = "block";
 }
 
-// ---------- CLEAN TEXT (IMPORTANT FIX HERE) ----------
+/* ---------------- CLEAN TEXT ---------------- */
 function clean(text) {
   return text
     .toLowerCase()
-    // remove punctuation including full stop
-    .replace(/[.,!?;:]/g, "")
-    // normalize spaces (prevents space-after-full-stop error)
-    .replace(/\s+/g, " ")
+    .replace(/[.,!?;:]/g, "")   // remove punctuation
+    .replace(/\s+/g, " ")       // normalize spaces
     .trim()
     .split(" ");
 }
 
-// ---------- HELPERS ----------
-function isNumber(word) {
-  return /^\d+$/.test(word);
+/* ---------------- HELPERS ---------------- */
+function isNumber(w) {
+  return /^\d+$/.test(w);
 }
 
 function isSpellingError(a, b) {
@@ -52,7 +49,7 @@ function isSpellingError(a, b) {
   return Math.abs(a.length - b.length) <= 2;
 }
 
-// ---------- ANALYSIS ----------
+/* ---------------- MAIN ANALYSIS (NO CASCADE) ---------------- */
 function analyse() {
   const typed = clean(document.getElementById("typed").value);
   const master = clean(document.getElementById("master").value);
@@ -61,46 +58,65 @@ function analyse() {
   let full = 0, half = 0;
   let html = "";
 
-  while (i < master.length || j < typed.length) {
+  while (i < master.length && j < typed.length) {
 
-    // Extra word
-    if (i >= master.length) {
-      html += `<span class="add">${typed[j]}</span> `;
-      full++; j++;
-      continue;
-    }
-
-    // Missing word
-    if (j >= typed.length) {
-      html += `<span class="miss">(${master[i]})</span> `;
-      full++; i++;
-      continue;
-    }
-
-    // Correct word
+    /* ✅ Correct */
     if (typed[j] === master[i]) {
       html += `<span class="ok">${typed[j]}</span> `;
       i++; j++;
       continue;
     }
 
-    // Number mismatch → full mistake
+    /* 🔎 Missing word (realign master) */
+    if (typed[j] === master[i + 1]) {
+      html += `<span class="miss">(${master[i]})</span> `;
+      full++;
+      i++;
+      continue;
+    }
+
+    /* 🔎 Extra word (realign typed) */
+    if (typed[j + 1] === master[i]) {
+      html += `<span class="add">${typed[j]}</span> `;
+      full++;
+      j++;
+      continue;
+    }
+
+    /* 🔢 Number mismatch → FULL */
     if (isNumber(typed[j]) || isNumber(master[i])) {
       html += `<span class="full">${typed[j]} (${master[i]})</span> `;
-      full++; i++; j++;
+      full++;
+      i++; j++;
       continue;
     }
 
-    // Spelling error → half mistake
+    /* ✏️ Spelling error → HALF */
     if (isSpellingError(typed[j], master[i])) {
       html += `<span class="half">${typed[j]} (${master[i]})</span> `;
-      half++; i++; j++;
+      half++;
+      i++; j++;
       continue;
     }
 
-    // Wrong word → full mistake
+    /* ❌ Genuine substitution → FULL */
     html += `<span class="full">${typed[j]} (${master[i]})</span> `;
-    full++; i++; j++;
+    full++;
+    i++; j++;
+  }
+
+  /* Remaining missing words */
+  while (i < master.length) {
+    html += `<span class="miss">(${master[i]})</span> `;
+    full++;
+    i++;
+  }
+
+  /* Remaining extra words */
+  while (j < typed.length) {
+    html += `<span class="add">${typed[j]}</span> `;
+    full++;
+    j++;
   }
 
   document.getElementById("result").innerHTML = `
