@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Steno Error Analyzer</title>
+  <title>Steno Dictation Test</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -10,11 +10,17 @@
 <div class="container">
   <h1>📝 Steno Dictation Test</h1>
 
-  <label>Master Passage</label>
-  <textarea id="master" placeholder="Paste master passage here..."></textarea>
+  <div class="row">
+    <div class="column">
+      <label>Master Passage</label>
+      <textarea id="master" placeholder="Paste master passage here..."></textarea>
+    </div>
 
-  <label>Typed Matter</label>
-  <textarea id="typed" placeholder="Start typing here..."></textarea>
+    <div class="column">
+      <label>Typed Matter</label>
+      <textarea id="typed" placeholder="Start typing here..."></textarea>
+    </div>
+  </div>
 
   <div class="controls">
     <button onclick="checkErrors()">Check Result</button>
