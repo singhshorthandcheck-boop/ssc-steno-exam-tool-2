@@ -1,45 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Steno Practice</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Steno Dictation Test</title>
+
+<!-- 🔥 INLINE CSS (NO DEPLOYMENT FAILURE POSSIBLE) -->
+<style>
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  padding: 20px;
+}
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e3a8a;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 10px;
+}
+
+#timer {
+  background: #dc2626;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.panels {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+textarea {
+  height: 320px;
+  padding: 10px;
+  font-size: 15px;
+  border: 2px solid #c7d2fe;
+  border-radius: 8px;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+button {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#result { margin-top: 20px; font-weight: bold; }
+#analysis { margin-top: 15px; line-height: 1.6; }
+
+/* 🔒 MASTER HIDDEN */
+.hidden { display: none; }
+</style>
 </head>
-<link rel="stylesheet" href="./style.css">
 
 <body>
-  <div class="app">
+<div class="app">
 
-    <header>
-      <h1>Steno Dictation Test</h1>
-      <div id="timer">50:00</div>
-    </header>
+  <header>
+    <h1>Steno Dictation Test</h1>
+    <div id="timer">50:00</div>
+  </header>
 
-    <div class="panels">
+  <div class="panels">
 
-      <!-- MASTER (HIDDEN INITIALLY) -->
-      <div class="panel hidden" id="masterPanel">
-        <h2>Master Passage</h2>
-        <textarea id="master"></textarea>
-      </div>
-
-      <!-- TYPED -->
-      <div class="panel">
-        <h2>Typed Matter</h2>
-        <textarea id="typed" placeholder="Start typing here..."></textarea>
-      </div>
-
+    <!-- MASTER (HIDDEN BY DEFAULT) -->
+    <div class="panel hidden" id="masterPanel">
+      <h2>Master Passage</h2>
+      <textarea id="master"></textarea>
     </div>
 
-    <div class="actions">
-      <button onclick="checkErrors()">Check Result</button>
+    <!-- TYPED -->
+    <div class="panel">
+      <h2>Typed Matter</h2>
+      <textarea id="typed" placeholder="Start typing here..."></textarea>
     </div>
-
-    <div id="result"></div>
-    <div id="analysis"></div>
 
   </div>
 
-  <script src="app.js" defer></script>
+  <div class="actions">
+    <button onclick="checkErrors()">Check Result</button>
+  </div>
+
+  <div id="result"></div>
+  <div id="analysis"></div>
+
+</div>
+
+<script src="app.js" defer></script>
 </body>
 </html>
