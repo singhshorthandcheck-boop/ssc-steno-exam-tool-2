@@ -1,6 +1,125 @@
-textarea { width:95%; height:150px; margin:10px 0; }
-.ok { color:green; }
-.add { color:red; }
-.miss { color:orange; }
-.half { color:purple; }
-#timer { font-weight:bold; color:red; }
+/* ---------- PAGE BACKGROUND ---------- */
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #fef9f3);
+  padding: 25px;
+  color: #1f2937;
+}
+
+/* ---------- HEADING ---------- */
+h2 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 15px;
+}
+
+/* ---------- TIMER ---------- */
+#timer {
+  width: fit-content;
+  margin: 0 auto 15px auto;
+  padding: 10px 25px;
+  font-size: 26px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ---------- TEXTAREAS ---------- */
+textarea {
+  width: 100%;
+  height: 160px;
+  padding: 15px;
+  font-size: 15px;
+  border-radius: 12px;
+  border: 2px solid #c7d2fe;
+  outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+textarea:focus {
+  border-color: #6366f1;
+}
+
+/* ---------- BUTTONS ---------- */
+button {
+  display: inline-block;
+  margin: 10px 0 20px 0;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  background: linear-gradient(90deg, #4f46e5, #4338ca);
+}
+
+/* ---------- MASTER SECTION ---------- */
+#masterSection {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+}
+
+/* ---------- RESULT BOX ---------- */
+#result {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* ---------- RESULT HEADING ---------- */
+#result h3 {
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* ---------- ERROR COLORS ---------- */
+.ok {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.full {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.half {
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.miss {
+  color: #7c3aed;
+  font-weight: bold;
+}
+
+.add {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+  textarea {
+    height: 140px;
+  }
+  #timer {
+    font-size: 22px;
+  }
+}
