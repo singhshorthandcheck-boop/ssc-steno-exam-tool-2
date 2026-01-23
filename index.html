@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Steno Dictation Test</title>
+  <title>Steno Practice</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
@@ -10,20 +10,24 @@
   <div class="app">
 
     <header>
-      <h1>📝 Steno Dictation Test</h1>
+      <h1>Steno Dictation Test</h1>
       <div id="timer">50:00</div>
     </header>
 
-    <!-- ONLY TYPED MATTER VISIBLE -->
-    <div class="panel">
-      <h2>Typed Matter</h2>
-      <textarea id="typed" placeholder="Start typing here..."></textarea>
-    </div>
+    <div class="panels">
 
-    <!-- MASTER PASSAGE HIDDEN INITIALLY -->
-    <div class="panel hidden" id="masterPanel">
-      <h2>Master Passage</h2>
-      <textarea id="master" placeholder="Paste master passage here..."></textarea>
+      <!-- MASTER (HIDDEN INITIALLY) -->
+      <div class="panel hidden" id="masterPanel">
+        <h2>Master Passage</h2>
+        <textarea id="master"></textarea>
+      </div>
+
+      <!-- TYPED -->
+      <div class="panel">
+        <h2>Typed Matter</h2>
+        <textarea id="typed" placeholder="Start typing here..."></textarea>
+      </div>
+
     </div>
 
     <div class="actions">
