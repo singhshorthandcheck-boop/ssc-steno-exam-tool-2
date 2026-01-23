@@ -93,4 +93,22 @@ function analyse() {
 
     // Spelling error → half mistake
     if (isSpellingError(typed[j], master[i])) {
-      html += `<span class="half">${typed[j]} (${master
+      html += `<span class="half">${typed[j]} (${master[i]})</span> `;
+      half++; i++; j++;
+      continue;
+    }
+
+    // Wrong word → full mistake
+    html += `<span class="full">${typed[j]} (${master[i]})</span> `;
+    full++; i++; j++;
+  }
+
+  document.getElementById("result").innerHTML = `
+    <h3>Result</h3>
+    <p>Full Mistakes: ${full}</p>
+    <p>Half Mistakes: ${half}</p>
+    <p><b>Total Mistakes:</b> ${full + half / 2}</p>
+    <hr>
+    ${html}
+  `;
+}
