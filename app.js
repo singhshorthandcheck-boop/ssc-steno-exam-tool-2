@@ -1,10 +1,10 @@
+// ================= TIMER LOGIC =================
+let totalSeconds = 50 * 60; // 50 minutes
 let timerStarted = false;
-let totalSeconds = 50 * 60;
-let timerInterval;
+let timerInterval = null;
 
-document.addEventListener("DOMContentLoaded", function () {
-  document.getElementById("typed").addEventListener("keydown", startTimer);
-});
+const timerEl = document.getElementById("timer");
+const typedEl = document.getElementById("typed");
 
 function startTimer() {
   if (timerStarted) return;
@@ -13,66 +13,75 @@ function startTimer() {
   timerInterval = setInterval(() => {
     if (totalSeconds <= 0) {
       clearInterval(timerInterval);
+      timerEl.textContent = "TIME UP";
+      typedEl.disabled = true;
       return;
     }
+
     totalSeconds--;
-    const min = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-    const sec = String(totalSeconds % 60).padStart(2, '0');
-    document.getElementById("timer").textContent = `${min}:${sec}`;
+    const min = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+    const sec = String(totalSeconds % 60).padStart(2, "0");
+    timerEl.textContent = `${min}:${sec}`;
   }, 1000);
 }
 
-/* ---------- NORMALIZATION (PDF LOGIC) ---------- */
-function normalize(text) {
+// Start timer when user types first character
+typedEl.addEventListener("input", startTimer);
+
+// ================= NORMALIZATION =================
+function normalizeText(text) {
   return text
+    .replace(/\.\s+/g, ".")     // IGNORE space after full stop
     .replace(/\s+/g, " ")
-    .replace(/\.\s+/g, ".") // ignore space after full stop
-    .trim();
+    .trim()
+    .toLowerCase();
 }
 
-/* ---------- MAIN CHECKER ---------- */
+// ================= ERROR CHECKING =================
 function checkErrors() {
+  // SHOW MASTER ONLY NOW (IMPORTANT FIX)
+  document.getElementById("masterPanel").classList.remove("hidden");
+
   clearInterval(timerInterval);
 
-  const master = normalize(document.getElementById("master").value);
-  const typed = normalize(document.getElementById("typed").value);
+  const typed = normalizeText(document.getElementById("typed").value);
+  const master = normalizeText(document.getElementById("master").value);
 
-  const mWords = master.split(" ");
-  const tWords = typed.split(" ");
+  const typedWords = typed.split(" ");
+  const masterWords = master.split(" ");
 
   let fullMistakes = 0;
   let halfMistakes = 0;
-  let output = "";
 
-  const maxLen = Math.max(mWords.length, tWords.length);
+  let analysisHTML = "";
+
+  const maxLen = Math.max(typedWords.length, masterWords.length);
 
   for (let i = 0; i < maxLen; i++) {
-    const mw = mWords[i] || "";
-    const tw = tWords[i] || "";
+    const t = typedWords[i] || "";
+    const m = masterWords[i] || "";
 
-    if (mw === tw) {
-      output += `<span class="correct">${mw}</span> `;
+    if (t === m) {
+      analysisHTML += `<span style="color:green">${t} </span>`;
     } 
-    else if (
-      mw.toLowerCase() === tw.toLowerCase() ||
-      mw.replace(/[.,]/g,"") === tw.replace(/[.,]/g,"")
-    ) {
+    else if (t && m && t[0] === m[0]) {
       halfMistakes++;
-      output += `<span class="half">${tw} (${mw})</span> `;
+      analysisHTML += `<span style="color:orange">${t} (${m}) </span>`;
     } 
     else {
       fullMistakes++;
-      output += `<span class="wrong">${tw || "_"} (${mw})</span> `;
+      analysisHTML += `<span style="color:red">${t || "∅"} (${m || "∅"}) </span>`;
     }
   }
 
-  const totalMistakes = fullMistakes + Math.floor(halfMistakes / 2);
+  const totalMistakes = fullMistakes + halfMistakes * 0.5;
 
   document.getElementById("result").innerHTML = `
-    Full Mistakes: ${fullMistakes}<br>
-    Half Mistakes: ${halfMistakes}<br>
-    <strong>Total Mistakes: ${totalMistakes}</strong>
+    <h3>Result</h3>
+    <p>Full Mistakes: <b>${fullMistakes}</b></p>
+    <p>Half Mistakes: <b>${halfMistakes}</b></p>
+    <p>Total Mistakes: <b>${totalMistakes}</b></p>
   `;
 
-  document.getElementById("analysis").innerHTML = output;
+  document.getElementById("analysis").innerHTML = analysisHTML;
 }
