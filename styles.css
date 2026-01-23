@@ -1,102 +1,125 @@
-* {
-  box-sizing: border-box;
-}
-
+/* ---------- PAGE BACKGROUND ---------- */
 body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  min-height: 100vh;
-}
-
-.app {
-  max-width: 1200px;
-  margin: 20px auto;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #4f46e5;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 10px;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-#timer {
-  font-size: 20px;
-  font-weight: bold;
-  background: #dc2626;
-  padding: 6px 14px;
-  border-radius: 20px;
-}
-
-.panels {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.panel h2 {
-  margin-bottom: 8px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #eef2ff, #fef9f3);
+  padding: 25px;
   color: #1f2937;
 }
 
+/* ---------- HEADING ---------- */
+h2 {
+  text-align: center;
+  color: #1e3a8a;
+  margin-bottom: 15px;
+}
+
+/* ---------- TIMER ---------- */
+#timer {
+  width: fit-content;
+  margin: 0 auto 15px auto;
+  padding: 10px 25px;
+  font-size: 26px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  color: white;
+  border-radius: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* ---------- TEXTAREAS ---------- */
 textarea {
-  height: 320px;
-  padding: 12px;
+  width: 100%;
+  height: 160px;
+  padding: 15px;
   font-size: 15px;
-  border-radius: 8px;
-  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  border: 2px solid #c7d2fe;
   outline: none;
+  box-sizing: border-box;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 textarea:focus {
   border-color: #6366f1;
 }
 
-.actions {
-  margin-top: 20px;
-  text-align: center;
-}
-
+/* ---------- BUTTONS ---------- */
 button {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  display: inline-block;
+  margin: 10px 0 20px 0;
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: bold;
   color: white;
+  background: linear-gradient(90deg, #6366f1, #4f46e5);
   border: none;
-  padding: 12px 28px;
-  font-size: 16px;
   border-radius: 25px;
   cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 button:hover {
-  opacity: 0.9;
+  background: linear-gradient(90deg, #4f46e5, #4338ca);
 }
 
-#result {
+/* ---------- MASTER SECTION ---------- */
+#masterSection {
   margin-top: 20px;
-  font-size: 16px;
+  padding: 15px;
+  border-radius: 15px;
+  background: #f0fdf4;
+  border: 2px solid #86efac;
+}
+
+/* ---------- RESULT BOX ---------- */
+#result {
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 15px;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* ---------- RESULT HEADING ---------- */
+#result h3 {
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+/* ---------- ERROR COLORS ---------- */
+.ok {
+  color: #16a34a;
   font-weight: bold;
 }
 
-#analysis {
-  margin-top: 15px;
-  line-height: 1.6;
+.full {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.half {
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.miss {
+  color: #7c3aed;
+  font-weight: bold;
+}
+
+.add {
+  color: #2563eb;
+  font-weight: bold;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 600px) {
+  textarea {
+    height: 140px;
+  }
+  #timer {
+    font-size: 22px;
+  }
 }
