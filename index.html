@@ -5,32 +5,35 @@
   <title>Steno Dictation Test</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+  <div class="app">
+    <header>
+      <h1>📝 Steno Dictation Test</h1>
+      <div id="timer">50:00</div>
+    </header>
 
-<div class="container">
-  <h1>📝 Steno Dictation Test</h1>
+    <div class="panels">
+      <div class="panel">
+        <h2>Master Passage</h2>
+        <textarea id="master" placeholder="Paste master passage AFTER typing..."></textarea>
+      </div>
 
-  <div class="row">
-    <div class="column">
-      <label>Master Passage</label>
-      <textarea id="master" placeholder="Paste master passage here..."></textarea>
+      <div class="panel">
+        <h2>Typed Matter</h2>
+        <textarea id="typed" placeholder="Start typing here..."></textarea>
+      </div>
     </div>
 
-    <div class="column">
-      <label>Typed Matter</label>
-      <textarea id="typed" placeholder="Start typing here..."></textarea>
+    <div class="actions">
+      <button onclick="checkErrors()">Check Result</button>
     </div>
+
+    <div id="result"></div>
+    <div id="analysis"></div>
   </div>
 
-  <div class="controls">
-    <button onclick="checkErrors()">Check Result</button>
-    <span id="timer">50:00</span>
-  </div>
-
-  <div id="result"></div>
-  <div id="analysis"></div>
-</div>
-
-<script src="app.js"></script>
+  <!-- ✅ DEPLOYMENT SAFE -->
+  <script src="app.js" defer></script>
 </body>
 </html>
